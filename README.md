@@ -4,12 +4,12 @@ COMBO is jointly trained neural tagger, lemmatizer and dependency parser impleme
 ## Usage
 Training your own model:
 ```
-python main.py --mode autotrain --train train_data.conll --valid valid_data.conllu --embed external_embedding.txt --model model_name.pkl --force_trees
+python main.py --mode autotrain --train train_data.conllu --valid valid_data.conllu --embed external_embedding.txt --model model_name.pkl --force_trees
 ```
 
 Making predictions:
 ```
-python main.py --mode predict --test test_data.conll --pred output_path.conllu --model model_name.pkl
+python main.py --mode predict --test test_data.conllu --pred output_path.conllu --model model_name.pkl
 ```
 
 ## Trained model
