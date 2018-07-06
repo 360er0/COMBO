@@ -1,5 +1,5 @@
 # COMBO
-COMBO is jointly trained neural tagger, lemmatizer and dependency parser implemented in python 3 using Keras framework. It took part of [*2018 CoNLL Universal Dependency shared task*](http://universaldependencies.org/conll18/) and ranked 4th/5th in the [*official evaluation*](http://universaldependencies.org/conll18/results.html).
+COMBO is jointly trained neural tagger, lemmatizer and dependency parser implemented in python 3 using Keras framework. It took part in [*2018 CoNLL Universal Dependency shared task*](http://universaldependencies.org/conll18/) and ranked 4th/5th in the [*official evaluation*](http://universaldependencies.org/conll18/results.html).
 
 ## Usage
 Training your own model:
@@ -13,7 +13,7 @@ python main.py --mode predict --test test_data.conll --pred output_path.conllu -
 ```
 
 ## Trained model
-We share models trained on UD dataset:
+Models trained on UD dataset:
 
 | Language | Treebank | LAS | MLAS | BLEX | Model |
 |-|-|-|-|-|-|
