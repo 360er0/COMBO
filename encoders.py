@@ -211,10 +211,11 @@ class FeatEncoder(BaseEstimator, TransformerMixin):
         for tree in trees:
             for token in tree.tokens:
                 for feat in token.fields['feats'].split(self.separator):
-                    if self.assigment not in feat:
-                        continue
-
-                    cat, val = feat.split(self.assigment)
+                    if self.assigment in feat:
+                        cat, val = feat.split(self.assigment)
+                    else:
+                        cat, val = feat, feat
+                    
                     if cat not in self.feat2idx:
                         self.feat2idx[cat] = {
                             None: 0,
@@ -245,10 +246,11 @@ class FeatEncoder(BaseEstimator, TransformerMixin):
                 # load token feats
                 token_feats_dict = {}
                 for feat in token.fields['feats'].split(self.separator):
-                    if self.assigment not in feat:
-                        continue
+                    if self.assigment in feat:
+                        cat, val = feat.split(self.assigment)
+                    else:
+                        cat, val = feat, feat
 
-                    cat, val = feat.split(self.assigment)
                     token_feats_dict[cat] = val
 
                 # update vector
@@ -271,7 +273,10 @@ class FeatEncoder(BaseEstimator, TransformerMixin):
 
                     cat, val = self.idx2feat[best_idx]
                     if val is not None:
-                        pred_feat.append(cat + self.assigment + val)
+                        if cat != val:
+                            pred_feat.append(cat + self.assigment + val)
+                        else:
+                            pred_feat.append(val)
 
                 if len(pred_feat) == 0:
                     pred_feat_str = '_'
