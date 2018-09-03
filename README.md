@@ -73,6 +73,7 @@ Models trained on UD dataset:
 | Persian | fa_seraji | 86.14 | 80.30 | 76.29 | [*737 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.fa_seraji.pkl) |
 | Polish | pl_lfg | 94.62 | 86.44 | 89.31 | [*737 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.pl_lfg.pkl) |
 | Polish | pl_sz | 91.38 | 80.45 | 85.59 | [*737 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.pl_sz.pkl) |
+| Polish | poleval2018 | 86.11 | 76.18 | 79.86 | [*115 MB*](http://mozart.ipipan.waw.pl/~prybak/model_poleval2018/model_A_semi.pkl) |
 | Portuguese | pt_bosque | 87.57 | 74.31 | 80.31 | [*737 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.pt_bosque.pkl) |
 | Romanian | ro_rrt | 85.31 | 76.84 | 79.54 | [*737 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.ro_rrt.pkl) |
 | Russian | ru_syntagrus | 91.10 | 85.37 | 87.16 | [*741 MB*](http://mozart.ipipan.waw.pl/~prybak/model_conll2018/model.ru_syntagrus.pkl) |
