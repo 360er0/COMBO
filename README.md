@@ -1,6 +1,9 @@
 # COMBO
 COMBO is jointly trained neural tagger, lemmatizer and dependency parser implemented in python 3 using Keras framework. It took part in [*2018 CoNLL Universal Dependency shared task*](http://universaldependencies.org/conll18/) and ranked 3rd/4th in the [*official evaluation*](http://universaldependencies.org/conll18/results.html).
 
+## Paper
+The COMBO description can be found here: [*Semi-Supervised Neural System for Tagging, Parsing and Lematization*](http://universaldependencies.org/conll18/proceedings/pdf/K18-2004.pdf).
+
 ## Usage
 Training your own model:
 ```
@@ -12,7 +15,7 @@ Making predictions:
 python main.py --mode predict --test test_data.conllu --pred output_path.conllu --model model_name.pkl
 ```
 
-## Trained model
+## Trained models
 Models trained on UD dataset:
 
 | Language | Treebank | LAS | MLAS | BLEX | Model |
@@ -97,4 +100,17 @@ Models trained on UD dataset:
 
 ## Citation
 
+```
+@InProceedings{rybak-wrblewska:2018:K18-2,
+  author    = {Rybak, Piotr  and  Wr{\'{o}}blewska, Alina},
+  title     = {Semi-Supervised Neural System for Tagging, Parsing and Lematization},
+  booktitle = {Proceedings of the {CoNLL} 2018 Shared Task: Multilingual Parsing from Raw Text to Universal Dependencies},
+  month     = {October},
+  year      = {2018},
+  address   = {Brussels, Belgium},
+  publisher = {Association for Computational Linguistics},
+  pages     = {45--54},
+  url       = {http://www.aclweb.org/anthology/K18-2004}
+}
+```
 
