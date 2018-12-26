@@ -145,7 +145,7 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                     'feats',
                 }
             else:
-                targets = {}
+                targets = set()
 
             for col_idx, target in enumerate(self.params.targets):
                 batch[col_idx].append(sample_weight if target in targets else 1e-9)
@@ -188,6 +188,9 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                         sample_weight=[np.array(w) for w in batch[2]],
                         # class_weight=['auto']*len(self.params.targets),
                     )
+                    if not isinstance(losses, list):
+                        losses = [losses]
+
                     print(epoch_idx, batch_idx, list(zip(self.model.metrics_names, losses)))
 
         except KeyboardInterrupt:
