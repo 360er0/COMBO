@@ -67,7 +67,6 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
 
         if words_batch > 0:
                 output_batch = [pad_sequences(x, padding='post') for x in batch]
-                batch = [[] for _ in range(n_cols)]
                 output.append(output_batch)
 
         return output
@@ -204,6 +203,8 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
         for batch in self.batchify_X(trees):
             batch_trees = trees[tree_idx:(tree_idx + batch[0].shape[0])]
             batch_probs = self.model.predict_on_batch(batch)
+            if not isinstance(batch_probs, list):
+                batch_probs = [batch_probs]
             batch_preds = self.targets_factory.inverse_transform(batch_probs, batch_trees)
 
             for row_idx, old_tree in enumerate(batch_trees):
