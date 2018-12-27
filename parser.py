@@ -67,7 +67,6 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
 
         if words_batch > 0:
                 output_batch = [pad_sequences(x, padding='post') for x in batch]
-                batch = [[] for _ in range(n_cols)]
                 output.append(output_batch)
 
         return output
@@ -145,7 +144,7 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                     'feats',
                 }
             else:
-                targets = {}
+                targets = set()
 
             for col_idx, target in enumerate(self.params.targets):
                 batch[col_idx].append(sample_weight if target in targets else 1e-9)
@@ -188,6 +187,9 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                         sample_weight=[np.array(w) for w in batch[2]],
                         # class_weight=['auto']*len(self.params.targets),
                     )
+                    if not isinstance(losses, list):
+                        losses = [losses]
+
                     print(epoch_idx, batch_idx, list(zip(self.model.metrics_names, losses)))
 
         except KeyboardInterrupt:
@@ -201,6 +203,8 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
         for batch in self.batchify_X(trees):
             batch_trees = trees[tree_idx:(tree_idx + batch[0].shape[0])]
             batch_probs = self.model.predict_on_batch(batch)
+            if not isinstance(batch_probs, list):
+                batch_probs = [batch_probs]
             batch_preds = self.targets_factory.inverse_transform(batch_probs, batch_trees)
 
             for row_idx, old_tree in enumerate(batch_trees):

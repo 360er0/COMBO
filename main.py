@@ -21,7 +21,7 @@ K.set_session(sess)
 
 ### main
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 from sklearn.externals import joblib
 from keras import backend as K
 
@@ -63,65 +63,87 @@ def get_comma_separated_float_args(option, opt, value, parser):
 
 
 if __name__ == '__main__':
-    parser = OptionParser()
-    parser.add_option("--mode", dest="mode", help="Mode of parser (train or predict)")
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--mode", dest="mode", help="Mode of parser (train or predict)",
+        choices=['train', 'autotrain', 'multitrain', 'evaluate', 'predict',
+                 'multipredict'])
 
-    parser.add_option("--train", dest="train", help="Annotated CONLLu train file", metavar="FILE")
-    parser.add_option("--valid", dest="valid", help="Annotated CONLLu valid file", metavar="FILE")
-    parser.add_option("--test", dest="test", help="Unannotated CONLLu test file", metavar="FILE")
+    parser.add_argument("--train", dest="train",
+                      help="Annotated CONLLu train file", metavar="FILE")
+    parser.add_argument("--valid", dest="valid",
+                      help="Annotated CONLLu valid file", metavar="FILE")
+    parser.add_argument("--test", dest="test",
+                      help="Unannotated CONLLu test file", metavar="FILE")
 
-    parser.add_option("--embed", dest="embed_file", help="External embeddings for forms", metavar="FILE")
-    parser.add_option("--model", dest="model_file", help="Load/Save model file", metavar="FILE", default="model.pkl")
-    parser.add_option("--pred", dest="pred_file", help="CONLLu output pred file", metavar="FILE")
+    parser.add_argument("--embed", dest="embed_file",
+                      help="External embeddings for forms", metavar="FILE")
+    parser.add_argument("--model", dest="model_file", default="model.pkl",
+                      help="Load/Save model file", metavar="FILE")
+    parser.add_argument("--pred", dest="pred_file",
+                      help="CONLLu output pred file", metavar="FILE")
 
-    parser.add_option("--train_embed", action="store_true", dest="train_embed", default=False)
-    parser.add_option("--train_partial", action="store_true", dest="train_partial", default=False)
-    parser.add_option("--full_tree", type="str", dest="full_tree", default='# conversion_status = complete')
-    parser.add_option("--partial_tree", type="str", dest="partial_tree", default='# conversion_status = no_tree')
+    parser.add_argument("--train_embed", action="store_true",
+                      dest="train_embed", default=False)
+    parser.add_argument("--train_partial", action="store_true",
+                      dest="train_partial", default=False)
+    parser.add_argument("--full_tree", dest="full_tree",
+                      default='# conversion_status = complete')
+    parser.add_argument("--partial_tree", dest="partial_tree",
+                      default='# conversion_status = no_tree')
 
-    parser.add_option("--features", type="str", dest="features", help="Which features to use: form, lemma, upostag, xpostag, feats, char", 
-        action="callback", callback=get_comma_separated_args, default=['form', 'char'])
-    parser.add_option("--targets", type="str", dest="targets", help="Which targets to predict: head, deprel, lemma, upostag, xpostag, feats, sent, semrel", 
-        action="callback", callback=get_comma_separated_args, default=['head', 'deprel', 'lemma', 'upostag', 'feats'])
-    parser.add_option("--loss_weights", type="str", dest="loss_weights", help="Importance of each loss", 
-        action="callback", callback=get_comma_separated_float_args, default=[0.2, 0.8, 0.05, 0.05, 0.2])
+    parser.add_argument(
+        "--features", dest="features",
+        help="Which features to use: form, lemma, upostag, xpostag, feats, char",
+        default=['form', 'char'], nargs='+',
+        choices=['form', 'lemma', 'upostag', 'xpostag', 'feats', 'char'])
+    parser.add_argument(
+        "--targets", dest="targets", nargs="+",
+        choices=['head', 'deprel', 'lemma', 'upostag', 'xpostag', 'feats',
+                 'sent', 'semrel'],
+        help="Which targets to predict: head, deprel, lemma, upostag, xpostag, "
+             "feats, sent, semrel",
+        default=['head', 'deprel', 'lemma', 'upostag', 'feats'])
+    parser.add_argument(
+        "--loss_weights", type=float, dest="loss_weights", nargs='+',
+        help="Importance of each loss", default=[0.2, 0.8, 0.05, 0.05, 0.2])
 
-    parser.add_option("--form_embed", type="int", dest="form_embed", default=100)
-    parser.add_option("--pos_embed", type="int", dest="pos_embed", default=32)
-    parser.add_option("--xpos_embed", type="int", dest="xpos_embed", default=32)
-    parser.add_option("--feat_embed", type="int", dest="feat_embed", default=32)
-    parser.add_option("--char_embed", type="int", dest="char_embed", default=64)
-    parser.add_option("--char_max_len", type="int", dest="char_max_len", default=30)
+    parser.add_argument("--form_embed", type=int, dest="form_embed", default=100)
+    parser.add_argument("--pos_embed", type=int, dest="pos_embed", default=32)
+    parser.add_argument("--xpos_embed", type=int, dest="xpos_embed", default=32)
+    parser.add_argument("--feat_embed", type=int, dest="feat_embed", default=32)
+    parser.add_argument("--char_embed", type=int, dest="char_embed", default=64)
+    parser.add_argument("--char_max_len", type=int, dest="char_max_len", default=30)
 
-    parser.add_option("--lstm_layers", type="int", dest="lstm_layers", default=2)
-    parser.add_option("--lstm_hidden_size", type="int", dest="lstm_hidden_size", default=512)
-    parser.add_option("--lstm_dropout", type="float", dest="lstm_dropout", default=0.25)
-    parser.add_option("--head_hidden_size", type="int", dest="head_hidden_size", default=512)
-    parser.add_option("--deprel_hidden_size", type="int", dest="deprel_hidden_size", default=128)
-    parser.add_option("--lemma_hidden_size", type="int", dest="lemma_hidden_size", default=256)
-    parser.add_option("--pos_hidden_size", type="int", dest="pos_hidden_size", default=64)
-    parser.add_option("--xpos_hidden_size", type="int", dest="xpos_hidden_size", default=128)
-    parser.add_option("--feat_hidden_size", type="int", dest="feat_hidden_size", default=128)
-    parser.add_option("--semrel_hidden_size", type="int", dest="semrel_hidden_size", default=64)
-    parser.add_option("--dense_dropout", type="float", dest="dense_droput", default=0.25)
-    parser.add_option("--input_dropout", type="float", dest="input_droput", default=0.25)
+    parser.add_argument("--lstm_layers", type=int, dest="lstm_layers", default=2)
+    parser.add_argument("--lstm_hidden_size", type=int, dest="lstm_hidden_size", default=512)
+    parser.add_argument("--lstm_dropout", type=float, dest="lstm_dropout", default=0.25)
+    parser.add_argument("--head_hidden_size", type=int, dest="head_hidden_size", default=512)
+    parser.add_argument("--deprel_hidden_size", type=int, dest="deprel_hidden_size", default=128)
+    parser.add_argument("--lemma_hidden_size", type=int, dest="lemma_hidden_size", default=256)
+    parser.add_argument("--pos_hidden_size", type=int, dest="pos_hidden_size", default=64)
+    parser.add_argument("--xpos_hidden_size", type=int, dest="xpos_hidden_size", default=128)
+    parser.add_argument("--feat_hidden_size", type=int, dest="feat_hidden_size", default=128)
+    parser.add_argument("--semrel_hidden_size", type=int, dest="semrel_hidden_size", default=64)
+    parser.add_argument("--dense_dropout", type=float, dest="dense_droput", default=0.25)
+    parser.add_argument("--input_dropout", type=float, dest="input_droput", default=0.25)
 
-    parser.add_option("--batch_size", type="int", dest="batch_size", default=2500)
-    parser.add_option("--epochs", type="int", dest="epochs", default=400)
-    parser.add_option("--lr", type="float", dest="learning_rate", default=0.002)
-    parser.add_option("--cycle_loss_n", type="int", dest="cycle_loss_n", default=3)
-    parser.add_option("--cycle_loss_weight", type="float", dest="cycle_loss_weight", default=1.0)
-    parser.add_option("--verbose", type="int", dest="verbose", default=1)
+    parser.add_argument("--batch_size", type=int, dest="batch_size", default=2500)
+    parser.add_argument("--epochs", type=int, dest="epochs", default=400)
+    parser.add_argument("--lr", type=float, dest="learning_rate", default=0.002)
+    parser.add_argument("--cycle_loss_n", type=int, dest="cycle_loss_n", default=3)
+    parser.add_argument("--cycle_loss_weight", type=float, dest="cycle_loss_weight", default=1.0)
+    parser.add_argument("--verbose", type=int, dest="verbose", default=1)
 
-    parser.add_option("--force_trees", action="store_true", dest="force_trees", default=False)
-    parser.add_option("--evaluate", action="store_true", dest="evaluate", default=False)
-    parser.add_option("--continue", action="store_true", dest="continue_training", default=False)
-    parser.add_option("--lower", action="store_true", dest="lower", default=False)
-    parser.add_option("--freeze", action="store_true", dest="freeze", default=False)
-    parser.add_option("--save_probs", action="store_true", dest="save_probs", default=False)
-    parser.add_option("--reload_params", action="store_true", dest="reload_params", default=False)
+    parser.add_argument("--force_trees", action="store_true", dest="force_trees", default=False)
+    parser.add_argument("--evaluate", action="store_true", dest="evaluate", default=False)
+    parser.add_argument("--continue", action="store_true", dest="continue_training", default=False)
+    parser.add_argument("--lower", action="store_true", dest="lower", default=False)
+    parser.add_argument("--freeze", action="store_true", dest="freeze", default=False)
+    parser.add_argument("--save_probs", action="store_true", dest="save_probs", default=False)
+    parser.add_argument("--reload_params", action="store_true", dest="reload_params", default=False)
 
-    params, _ = parser.parse_args()
+    params = parser.parse_args()
     valid_params(params)
 
     if 'semrel' in params.targets:
