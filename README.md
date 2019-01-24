@@ -97,6 +97,7 @@ Models trained on UD dataset:
 
 
 ## License
+CC BY-NC-SA 4.0
 
 ## Citation
 
