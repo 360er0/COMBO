@@ -25,7 +25,7 @@ from argparse import ArgumentParser
 from sklearn.externals import joblib
 from keras import backend as K
 
-from parser import Parser
+from parsing import Parser
 from utils import (
     ConllLoader,
     ConllSaver,

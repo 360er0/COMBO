@@ -1,6 +1,5 @@
 import gc
 import random
-import resource
 from copy import deepcopy
 
 import numpy as np
