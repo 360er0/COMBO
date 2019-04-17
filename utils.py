@@ -53,7 +53,7 @@ class TSVLoader:
         trees = []
         tree = None
         comments = []
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 ls = line.strip().split('\t')
                 
