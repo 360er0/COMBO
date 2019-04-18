@@ -25,7 +25,10 @@ from argparse import ArgumentParser
 from sklearn.externals import joblib
 from keras import backend as K
 
-from parsing import Parser
+# ugly hack to prevent built-in parser module from loading
+import sys; sys.meta_path.append(sys.meta_path.pop(0))
+
+from parser import Parser
 from utils import (
     ConllLoader,
     ConllSaver,
