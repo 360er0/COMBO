@@ -157,7 +157,7 @@ class TxtLoader():
 
     def load(self, filename):
         output = []
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             for tree_id, sent in enumerate(f):
                 tree = Tree(
                     tree_id=tree_id,
@@ -190,7 +190,7 @@ class TxtLoader():
 class TSVSaver:
 
     def save(self, filename, trees):
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='utf-8') as f:
             for tree in trees:
                 tree_output = []
                 tree_output += tree.comments
