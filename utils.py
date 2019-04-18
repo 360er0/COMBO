@@ -96,7 +96,6 @@ class TSVLoader:
                     tree.tokens.append(token)
 
             if tree is not None:
-                print([t.fields for t in tree.tokens])
                 if max([self.safe_int(t.fields['head']) for t in tree.tokens]) < len(tree.tokens):
                     trees.append(tree)
 
