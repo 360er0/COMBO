@@ -18,7 +18,8 @@ from utils import (
     print_summary,
     ensure_deterministic,
     em_score,
-    EmbeddingSaver)
+    EmbeddingSaver,
+    TxtLoader)
 
 
 def valid_params(params):
@@ -105,6 +106,9 @@ if __name__ == '__main__':
     else:
         loader = ConllLoader()
         saver = ConllSaver()
+
+    if params.test.endswith('.txt'):
+        loader = TxtLoader(semantic=('semrel' in params.targets))
 
     if params.mode == 'train':
         print('Load train data', time.strftime("%Y-%m-%d %H:%M:%S"))

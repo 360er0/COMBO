@@ -58,6 +58,8 @@ class Tree:
 
 class TSVLoader:
 
+    columns = []
+
     def safe_int(self, i):
         try:
             return int(i)
@@ -151,7 +153,7 @@ class ConllSemanticLoader(TSVLoader):
     ]
 
 
-class TxtLoader():
+class TxtLoader:
 
     columns = [
         'id',
@@ -166,6 +168,10 @@ class TxtLoader():
         'misc',
     ]
 
+    def __init__(self, semantic=False):
+        if semantic:
+            self.columns.append('semrel')
+
     @staticmethod
     def tokenize(s):
         return [t for t in re.findall(r'\w+|\W', s) if ' ' not in t]
@@ -178,9 +184,10 @@ class TxtLoader():
                     tree_id=tree_id,
                     tokens=[],
                     words=[],
+                    comments=[],
                 )
                 
-                fields = dict(zip(columns, ['__ROOT__']*len(columns)))
+                fields = dict(zip(self.columns, ['__ROOT__']*len(self.columns)))
                 fields['id'] = '0' 
                 fields['head'] = '0'
 
@@ -189,8 +196,9 @@ class TxtLoader():
                 )
                 tree.tokens.append(token)
                 
-                for token in self.tokenize(sent):
-                    fields = dict(zip(columns, ['_']*len(columns)))
+                for token_id, token in enumerate(self.tokenize(sent)):
+                    fields = dict(zip(self.columns, ['_']*len(self.columns)))
+                    fields['id'] = str(token_id + 1)
                     fields['form'] = token
                     token = Token(
                         fields=fields,
