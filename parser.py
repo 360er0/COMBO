@@ -119,13 +119,14 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
     def batchify_weights(self, trees):
         output = []
         words_batch = 0
-        n_cols = len(self.params.targets)
+        targets = [t for t in self.params.targets if t not in ['sent']]
+        n_cols = len(targets)
         batch = [[] for _ in range(n_cols)]
         for row_idx, tree in enumerate(trees):
             words_batch += len(tree.tokens)
             sample_weight = np.log(len(tree.tokens))
             if not self.params.train_partial or self.params.full_tree in tree.comments:
-                targets = {
+                nonzero_targets = {
                     'head',
                     'deprel',
                     'lemma',
@@ -135,17 +136,17 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                     'semrel',
                 }
             elif self.params.partial_tree in tree.comments:
-                targets = {
+                nonzero_targets = {
                     'lemma',
                     'upostag',
                     'xpostag',
                     'feats',
                 }
             else:
-                targets = set()
+                nonzero_targets = set()
 
-            for col_idx, target in enumerate(self.params.targets):
-                batch[col_idx].append(sample_weight if target in targets else 1e-9)
+            for col_idx, target in enumerate(targets):
+                batch[col_idx].append(sample_weight if target in nonzero_targets else 1e-9)
 
             if words_batch > self.params.batch_size:
                 output.append(batch)

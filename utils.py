@@ -258,7 +258,7 @@ class EmbeddingSaver:
     def save(self, filename, trees):
         with open(filename, 'w', encoding='utf-8') as f:
             for tree in trees:
-                f.write(' '.join([tree.id] + map(str, tree.emb.tolist())) + '\n')
+                f.write(' '.join([str(tree.id)] + [str(e) for e in tree.emb]) + '\n')
 
 
 def accuracy_score(pred, true, fields):

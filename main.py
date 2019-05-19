@@ -304,8 +304,8 @@ if __name__ == '__main__':
 
         print('Save predictions', time.strftime("%Y-%m-%d %H:%M:%S"))
         saver.save(params.pred_file, pred)
-        if 'sent' in params.targets:
-            EmbeddingSaver().save(re.sub(r'\..+$', r'\.vec', params.pred_file), pred)
+        if 'sent' in parser.params.targets:
+            EmbeddingSaver().save(re.sub(r'\..+$', r'.vec', params.pred_file), pred)
 
     elif params.mode == 'multipredict':
         print('Load model', time.strftime("%Y-%m-%d %H:%M:%S"))
