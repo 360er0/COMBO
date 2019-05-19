@@ -4,7 +4,6 @@ from keras import backend as K
 from keras import regularizers
 from keras.layers import (
     Input,
-    Add,
     GlobalMaxPooling1D,
     TimeDistributed,
     Masking,
@@ -19,14 +18,12 @@ from keras.layers import (
     Dropout,
     GaussianNoise,
     RepeatVector,
-    Reshape,
-    Permute,
     GaussianDropout,
 )
 from keras.layers.embeddings import Embedding
-from keras.losses import categorical_crossentropy, binary_crossentropy
+from keras.losses import categorical_crossentropy
 from keras.models import Model
-from keras.optimizers import Adam, RMSprop
+from keras.optimizers import Adam
 
 
 class RemoveMask(Lambda):

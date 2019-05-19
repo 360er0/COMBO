@@ -8,6 +8,7 @@ from keras.utils.np_utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
 from keras import backend as K
 
+
 def ensure_deterministic():
     seed = 123
     os.environ['PYTHONHASHSEED'] = '0'
@@ -270,26 +271,6 @@ def accuracy_score(pred, true, fields):
 
     return correct/total
 
-def uas_score(pred, true):
-    return accuracy_score(pred, true, ['head'])
-
-def las_score(pred, true):
-    return accuracy_score(pred, true, ['head', 'deprel'])
-
-def lemma_score(pred, true):
-    return accuracy_score(pred, true, ['lemma'])
-
-def pos_score(pred, true):
-    return accuracy_score(pred, true, ['upostag'])
-
-def xpos_score(pred, true):
-    return accuracy_score(pred, true, ['xpostag'])
-
-def semrel_score(pred, true):
-    return accuracy_score(pred, true, ['semrel'])
-
-def full_score(pred, true):
-    return accuracy_score(pred, true, ['head', 'deprel', 'upostag', 'feat', 'lemma'])
 
 def feat_score(pred, true):
     if len(pred) != len(true):
@@ -308,6 +289,7 @@ def feat_score(pred, true):
 
     return correct/total
 
+
 def em_score(pred, true):
     if len(pred) != len(true):
         raise ValueError
@@ -320,6 +302,7 @@ def em_score(pred, true):
         total += 1
 
     return correct/total
+
 
 def cycle_score(pred, true):
     # https://sci-hub.tw/10.1002/aic.690110316
@@ -340,16 +323,15 @@ def cycle_score(pred, true):
 
     return np.mean(results > 0.0)
 
+
 def print_summary(pred, true):
-    print('UAS: {}\nLAS: {}\nLEMMA: {}\nPOS: {}\nXPOS: {}\nFEAT: {}\nSEM: {}\nEM: {}\nCycle: {}\n'.format(
-                uas_score(pred, true),
-                las_score(pred, true),
-                lemma_score(pred, true),
-                pos_score(pred, true),
-                xpos_score(pred, true),
-                feat_score(pred, true),
-                semrel_score(pred, true),
-                em_score(pred, true),
-                -1, # cycle_score(pred, true),
-            ),
-        )
+    print('UAS: {}\nLAS: {}\nLEMMA: {}\nPOS: {}\nXPOS: {}\nFEAT: {}\nSEM: {}\nEM: {}\n'.format(
+            accuracy_score(pred, true, ['head']),
+            accuracy_score(pred, true, ['head', 'deprel']),
+            accuracy_score(pred, true, ['lemma']),
+            accuracy_score(pred, true, ['upostag']),
+            accuracy_score(pred, true, ['xpostag']),
+            feat_score(pred, true),
+            accuracy_score(pred, true, ['semrel']),
+            accuracy_score(pred, true, ['head', 'deprel', 'upostag', 'feat', 'lemma']),
+        ))

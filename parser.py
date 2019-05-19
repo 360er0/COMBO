@@ -1,4 +1,3 @@
-import gc
 import random
 from copy import deepcopy
 
