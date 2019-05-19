@@ -24,19 +24,8 @@ def valid_params(params):
     if 'deprel' in params.targets and 'head' not in params.targets:
         raise KeyError('You have to predict "head" in order to predict "deprel".')
 
-    if params.mode not in ['train', 'autotrain', 'multitrain', 'evaluate', 'predict', 'multipredict']:
-        raise KeyError('Set "mode" argument to either "train", "predict" or "evaluate".')
-
     if len(params.targets) != len(params.loss_weights):
         raise KeyError('loss_weights and targets must be the same length.')
-
-
-def get_comma_separated_args(option, opt, value, parser):
-    setattr(parser.values, option.dest, value.split(','))
-
-
-def get_comma_separated_float_args(option, opt, value, parser):
-    setattr(parser.values, option.dest, [float(v) for v in value.split(',')])
 
 
 if __name__ == '__main__':
@@ -45,46 +34,30 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument(
         "--mode", dest="mode", help="Mode of parser (train or predict)",
-        choices=['train', 'autotrain', 'multitrain', 'evaluate', 'predict',
-                 'multipredict'])
+        choices=['train', 'autotrain', 'multitrain', 'evaluate', 'predict', 'multipredict'])
 
-    parser.add_argument("--train", dest="train",
-                      help="Annotated CONLLu train file", metavar="FILE")
-    parser.add_argument("--valid", dest="valid",
-                      help="Annotated CONLLu valid file", metavar="FILE")
-    parser.add_argument("--test", dest="test",
-                      help="Unannotated CONLLu test file", metavar="FILE")
+    parser.add_argument("--train", dest="train", help="Annotated CONLLu train file", metavar="FILE")
+    parser.add_argument("--valid", dest="valid", help="Annotated CONLLu valid file", metavar="FILE")
+    parser.add_argument("--test", dest="test", help="Unannotated CONLLu test file", metavar="FILE")
 
-    parser.add_argument("--embed", dest="embed_file",
-                      help="External embeddings for forms", metavar="FILE")
-    parser.add_argument("--model", dest="model_file", default="model.pkl",
-                      help="Load/Save model file", metavar="FILE")
-    parser.add_argument("--pred", dest="pred_file",
-                      help="CONLLu output pred file", metavar="FILE")
+    parser.add_argument("--embed", dest="embed_file", help="External embeddings for forms", metavar="FILE")
+    parser.add_argument("--model", dest="model_file", default="model.pkl", help="Load/Save model file", metavar="FILE")
+    parser.add_argument("--pred", dest="pred_file", help="CONLLu output pred file", metavar="FILE")
 
-    parser.add_argument("--train_embed", action="store_true",
-                      dest="train_embed", default=False)
-    parser.add_argument("--train_partial", action="store_true",
-                      dest="train_partial", default=False)
-    parser.add_argument("--full_tree", dest="full_tree",
-                      default='# conversion_status = complete')
-    parser.add_argument("--partial_tree", dest="partial_tree",
-                      default='# conversion_status = no_tree')
+    parser.add_argument("--train_embed", action="store_true", dest="train_embed", default=False)
+    parser.add_argument("--train_partial", action="store_true", dest="train_partial", default=False)
+    parser.add_argument("--full_tree", dest="full_tree", default='# conversion_status = complete')
+    parser.add_argument("--partial_tree", dest="partial_tree", default='# conversion_status = no_tree')
 
-    parser.add_argument(
-        "--features", dest="features",
+    parser.add_argument("--features", dest="features", nargs='+',
         help="Which features to use: form, lemma, upostag, xpostag, feats, char",
-        default=['form', 'char'], nargs='+',
-        choices=['form', 'lemma', 'upostag', 'xpostag', 'feats', 'char'])
-    parser.add_argument(
-        "--targets", dest="targets", nargs="+",
-        choices=['head', 'deprel', 'lemma', 'upostag', 'xpostag', 'feats',
-                 'sent', 'semrel'],
-        help="Which targets to predict: head, deprel, lemma, upostag, xpostag, "
-             "feats, sent, semrel",
+        choices=['form', 'lemma', 'upostag', 'xpostag', 'feats', 'char'],
+        default=['form', 'char'])
+    parser.add_argument("--targets", dest="targets", nargs="+",
+        help="Which targets to predict: head, deprel, lemma, upostag, xpostag, feats, sent, semrel",
+        choices=['head', 'deprel', 'lemma', 'upostag', 'xpostag', 'feats', 'sent', 'semrel'],
         default=['head', 'deprel', 'lemma', 'upostag', 'feats'])
-    parser.add_argument(
-        "--loss_weights", type=float, dest="loss_weights", nargs='+',
+    parser.add_argument("--loss_weights", type=float, dest="loss_weights", nargs='+',
         help="Importance of each loss", default=[0.2, 0.8, 0.05, 0.05, 0.2])
 
     parser.add_argument("--form_embed", type=int, dest="form_embed", default=100)
