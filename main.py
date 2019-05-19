@@ -1,4 +1,5 @@
 import os
+import re
 import time
 from argparse import ArgumentParser
 
@@ -17,14 +18,14 @@ from utils import (
     print_summary,
     ensure_deterministic,
     em_score,
-)
+    EmbeddingSaver)
 
 
 def valid_params(params):
     if 'deprel' in params.targets and 'head' not in params.targets:
         raise KeyError('You have to predict "head" in order to predict "deprel".')
 
-    if len(params.targets) != len(params.loss_weights):
+    if 'train' in params.mode and len(params.targets) != len(params.loss_weights):
         raise KeyError('loss_weights and targets must be the same length.')
 
 
@@ -303,6 +304,8 @@ if __name__ == '__main__':
 
         print('Save predictions', time.strftime("%Y-%m-%d %H:%M:%S"))
         saver.save(params.pred_file, pred)
+        if 'sent' in params.targets:
+            EmbeddingSaver().save(re.sub(r'\..+$', r'\.vec', params.pred_file), pred)
 
     elif params.mode == 'multipredict':
         print('Load model', time.strftime("%Y-%m-%d %H:%M:%S"))
