@@ -1,27 +1,7 @@
-### set random seed + limit number of threads
-
 import os
 import time
-import random
-
-import numpy as np
-import tensorflow as tf
-
-
-os.environ['PYTHONHASHSEED'] = '0'
-np.random.seed(123)
-random.seed(123)
-session_conf = tf.ConfigProto(intra_op_parallelism_threads=16, inter_op_parallelism_threads=16)
-
-from keras import backend as K
-tf.set_random_seed(123)
-sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
-K.set_session(sess)
-
-
-### main
-
 from argparse import ArgumentParser
+
 from sklearn.externals import joblib
 from keras import backend as K
 
@@ -35,14 +15,8 @@ from utils import (
     ConllSemanticLoader,
     ConllSemanticSaver,
     print_summary,
-    uas_score,
-    las_score,
-    lemma_score,
-    pos_score,
-    xpos_score,
-    semrel_score,
-    feat_score,
     full_score,
+    ensure_deterministic,
 )
 
 
@@ -66,6 +40,8 @@ def get_comma_separated_float_args(option, opt, value, parser):
 
 
 if __name__ == '__main__':
+    ensure_deterministic()
+
     parser = ArgumentParser()
     parser.add_argument(
         "--mode", dest="mode", help="Mode of parser (train or predict)",

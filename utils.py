@@ -1,8 +1,23 @@
 import re
+import os
+import random
 
 import numpy as np
+import tensorflow as tf
 from keras.utils.np_utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
+from keras import backend as K
+
+def ensure_deterministic():
+    seed = 123
+    os.environ['PYTHONHASHSEED'] = '0'
+    np.random.seed(seed)
+    random.seed(seed)
+    session_conf = tf.ConfigProto(intra_op_parallelism_threads=16, inter_op_parallelism_threads=16)
+
+    tf.set_random_seed(seed)
+    sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
+    K.set_session(sess)
 
 
 class Token:
