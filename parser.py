@@ -2,6 +2,7 @@ import random
 from copy import deepcopy
 
 import numpy as np
+from sparse import COO
 from sklearn.base import BaseEstimator, TransformerMixin
 from keras.utils.np_utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
@@ -96,7 +97,7 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                         output_batch.append(to_categorical(padded_target, num_classes=self.targets_factory.encoders[target].vocab_size))
 
                 batch = [[] for _ in range(n_cols)]
-                output.append(output_batch)
+                output.append([COO.from_numpy(a) for a in output_batch])
                 words_batch = 0
 
         if words_batch > 0:
@@ -112,7 +113,7 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                     output_batch.append(to_categorical(padded_target, num_classes=self.targets_factory.encoders[target].vocab_size))
 
             batch = [[] for _ in range(n_cols)]
-            output.append(output_batch)
+            output.append([COO.from_numpy(a) for a in output_batch])
 
         return output
 
@@ -182,7 +183,7 @@ class Parser(BaseEstimator, TransformerMixin, KerasModel):
                 for batch_idx, batch in enumerate(batches):
                     losses = self.model.train_on_batch(
                         x=batch[0],
-                        y=batch[1],
+                        y=[a.todense() for a in batch[1]],
                         sample_weight=[np.array(w) for w in batch[2]],
                         # class_weight=['auto']*len(self.params.targets),
                     )
