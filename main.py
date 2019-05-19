@@ -16,6 +16,7 @@ from utils import (
     ConllSemanticSaver,
     print_summary,
     ensure_deterministic,
+    em_score,
 )
 
 
@@ -221,7 +222,7 @@ if __name__ == '__main__':
         parser.params.epochs = epochs_per_eval
 
         scores = []
-        score_func = full_score
+        score_func = em_score
         for i in range(iters):
             print('Train iter', i, time.strftime("%Y-%m-%d %H:%M:%S"))
             parser.fit(train_data)
