@@ -15,7 +15,6 @@ from utils import (
     ConllSemanticLoader,
     ConllSemanticSaver,
     print_summary,
-    full_score,
     ensure_deterministic,
 )
 
