@@ -196,7 +196,7 @@ class TxtLoader:
                 )
                 tree.tokens.append(token)
                 
-                for token_id, token in enumerate(self.tokenize(sent)):
+                for token_id, token in enumerate(self.tokenize(sent.strip())):
                     fields = dict(zip(self.columns, ['_']*len(self.columns)))
                     fields['id'] = str(token_id + 1)
                     fields['form'] = token
