@@ -107,9 +107,6 @@ if __name__ == '__main__':
         loader = ConllLoader()
         saver = ConllSaver()
 
-    if params.test.endswith('.txt'):
-        loader = TxtLoader(semantic=('semrel' in params.targets))
-
     if params.mode == 'train':
         print('Load train data', time.strftime("%Y-%m-%d %H:%M:%S"))
         train_data = loader.load(params.train)
@@ -291,6 +288,9 @@ if __name__ == '__main__':
         print_summary(pred, test_data)
 
     elif params.mode == 'predict':
+        if params.test.endswith('.txt'):
+            loader = TxtLoader(semantic=('semrel' in params.targets))
+
         print('Load model', time.strftime("%Y-%m-%d %H:%M:%S"))
         parser = joblib.load(params.model_file)
         if params.reload_params:
