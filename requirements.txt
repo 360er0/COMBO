@@ -3,3 +3,4 @@ numpy==1.16.2
 Keras==2.2.4
 scikit-learn==0.20.3
 tensorflow==1.13.1
+joblib
