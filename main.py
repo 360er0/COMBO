@@ -3,7 +3,7 @@ import re
 import time
 from argparse import ArgumentParser
 
-import joblib
+from sklearn.externals import joblib
 from keras import backend as K
 
 # ugly hack to prevent built-in parser module from loading
